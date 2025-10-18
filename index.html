@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>macOS WebOS</title>
+    <link rel="stylesheet" href="css/main.css" />
+  </head>
+  <body>
+    <div id="desktop" class="desktop">
+      <canvas id="desktop-background" class="desktop-background"></canvas>
+      <div id="mission-control" class="mission-control hidden"></div>
+      <div id="menu-bar" class="menu-bar"></div>
+      <div id="window-layer" class="window-layer"></div>
+      <div id="dock" class="dock"></div>
+      <div id="context-menu" class="context-menu hidden"></div>
+      <div id="tooltips" class="tooltips-layer"></div>
+      <div id="dialogs" class="dialogs-layer"></div>
+    </div>
+    <script src="js/vendor/sf-inter.js"></script>
+    <script src="js/core/utils.js"></script>
+    <script src="js/core/event-bus.js"></script>
+    <script src="js/core/window-manager.js"></script>
+    <script src="js/core/menu-bar.js"></script>
+    <script src="js/core/dock.js"></script>
+    <script src="js/core/mission-control.js"></script>
+    <script src="js/core/context-menu.js"></script>
+    <script src="js/core/file-system.js"></script>
+    <script src="js/core/preferences.js"></script>
+    <script src="js/core/app-registry.js"></script>
+    <script src="js/core/tooltip-manager.js"></script>
+    <script src="js/core/dialog-manager.js"></script>
+    <script src="js/apps/calculator.js"></script>
+    <script src="js/apps/notepad.js"></script>
+    <script src="js/apps/finder.js"></script>
+    <script src="js/apps/terminal.js"></script>
+    <script src="js/apps/system-preferences.js"></script>
+    <script src="js/app.js"></script>
+  </body>
+</html>

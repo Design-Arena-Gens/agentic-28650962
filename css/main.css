@@ -1,0 +1,987 @@
+:root {
+  --mac-bg: rgba(246, 246, 248, 0.82);
+  --mac-window: rgba(251, 251, 253, 0.89);
+  --mac-menu-bar: rgba(246, 246, 248, 0.75);
+  --mac-shadow: rgba(15, 23, 42, 0.15);
+  --mac-shadow-strong: rgba(15, 23, 42, 0.25);
+  --mac-border: rgba(255, 255, 255, 0.4);
+  --mac-text: rgba(32, 32, 36, 0.96);
+  --mac-secondary: rgba(90, 90, 100, 0.86);
+  --mac-accent: #0a84ff;
+  --mac-accent-secondary: #64d2ff;
+  --mac-dock-bg: rgba(255, 255, 255, 0.75);
+  --mac-dock-border: rgba(255, 255, 255, 0.65);
+  --mac-dock-shadow: rgba(0, 0, 0, 0.25);
+  --mac-tooltip: rgba(50, 50, 52, 0.92);
+  --mac-tooltip-text: #f8f9fa;
+  --mac-font-sans: -apple-system, BlinkMacSystemFont, "San Francisco", "SF Pro Text", "Segoe UI", sans-serif;
+  --mac-font-mono: "Menlo", "Monaco", "SFMono-Regular", monospace;
+  font-size: 16px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  background: #0b1728;
+  font-family: var(--mac-font-sans);
+  color: var(--mac-text);
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+}
+
+body.dark-mode {
+  background: #050b12;
+  color: rgba(240, 240, 246, 0.96);
+}
+
+body.dark-mode .menu-bar {
+  background: rgba(28, 28, 32, 0.9);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.6);
+}
+
+body.dark-mode .dock {
+  background: rgba(32, 32, 38, 0.85);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.desktop {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  backdrop-filter: saturate(180%) blur(30px);
+}
+
+.desktop-background {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #002b65, #0062ff, #9c46ff);
+  filter: saturate(130%);
+  z-index: 1;
+}
+
+.menu-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  background: var(--mac-menu-bar);
+  backdrop-filter: saturate(180%) blur(28px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+  z-index: 5;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+
+.menu-bar .menu-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.menu-bar .menu-section.brand {
+  font-weight: 600;
+  margin-right: 20px;
+}
+
+.menu-bar .menu-item {
+  position: relative;
+  font-size: 13px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: background 120ms ease;
+  cursor: default;
+}
+
+.menu-bar .menu-item:hover,
+.menu-bar .menu-item.active {
+  background: rgba(255, 255, 255, 0.28);
+}
+
+.menu-bar .status-section {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 12px;
+}
+
+.status-icon {
+  width: 18px;
+  height: 12px;
+  position: relative;
+}
+
+.status-icon.wifi::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50% 50% 0 0;
+  border: 2px solid rgba(20, 20, 28, 0.7);
+  border-bottom: none;
+}
+
+.status-icon.battery {
+  border: 1.5px solid rgba(20, 20, 28, 0.7);
+  border-radius: 3px;
+}
+
+.status-icon.battery::after {
+  content: "";
+  position: absolute;
+  right: -4px;
+  top: 2px;
+  width: 3px;
+  height: 6px;
+  border-radius: 1px;
+  background: rgba(20, 20, 28, 0.7);
+}
+
+.window-layer {
+  position: absolute;
+  inset: 0;
+  padding-top: 36px;
+  padding-bottom: 100px;
+  z-index: 3;
+}
+
+.mission-control {
+  position: absolute;
+  inset: 36px 0 100px 0;
+  z-index: 4;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 24px;
+  padding: 32px;
+  backdrop-filter: blur(18px) saturate(140%);
+  background: rgba(10, 10, 25, 0.35);
+}
+
+.mission-control.hidden {
+  display: none;
+}
+
+.dock {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: flex-end;
+  gap: 18px;
+  padding: 12px 18px;
+  background: var(--mac-dock-bg);
+  border: 1px solid var(--mac-dock-border);
+  border-radius: 22px;
+  backdrop-filter: blur(22px) saturate(120%);
+  box-shadow: 0 18px 40px var(--mac-dock-shadow), 0 1px 0 rgba(255, 255, 255, 0.42) inset;
+  z-index: 10;
+}
+
+.dock::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 22px;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0));
+  pointer-events: none;
+}
+
+.dock-icon {
+  position: relative;
+  width: 64px;
+  height: 64px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 120ms ease, filter 120ms ease;
+  cursor: pointer;
+  box-shadow: 0 12px 18px rgba(0, 0, 0, 0.2), 0 1px 0 rgba(255, 255, 255, 0.5) inset;
+  overflow: hidden;
+}
+
+.dock-icon img,
+.dock-icon canvas,
+.dock-icon svg {
+  width: 70%;
+  height: 70%;
+}
+
+.dock-icon:hover {
+  transform: translateY(-12px) scale(1.18);
+  filter: saturate(125%);
+}
+
+.dock-icon.active::after {
+  content: "";
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 10px;
+  height: 4px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 0 6px rgba(255, 255, 255, 0.8);
+}
+
+.window {
+  position: absolute;
+  min-width: 380px;
+  min-height: 260px;
+  background: var(--mac-window);
+  border-radius: 18px;
+  box-shadow: 0 32px 60px rgba(15, 23, 42, 0.25), 0 1px 0 rgba(255, 255, 255, 0.6) inset;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  backdrop-filter: blur(24px);
+  animation: window-pop 260ms ease;
+}
+
+.window.inactive {
+  filter: grayscale(0.1) opacity(0.88);
+}
+
+.window-header {
+  height: 36px;
+  padding: 0 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.35);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0.25));
+  cursor: default;
+  user-select: none;
+}
+
+.traffic-lights {
+  display: flex;
+  gap: 6px;
+}
+
+.traffic-light {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  position: relative;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.15);
+}
+
+.traffic-light.red {
+  background: radial-gradient(circle at 30% 30%, #ff8a80, #ff6057);
+}
+
+.traffic-light.yellow {
+  background: radial-gradient(circle at 30% 30%, #ffd97b, #ffbd2e);
+}
+
+.traffic-light.green {
+  background: radial-gradient(circle at 30% 30%, #9fffa6, #28c840);
+}
+
+.traffic-light::after {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  border-radius: 50%;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  opacity: 0;
+  transition: opacity 150ms ease;
+}
+
+.window:hover .traffic-light::after {
+  opacity: 1;
+}
+
+.window-title {
+  flex: 1;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: rgba(20, 20, 28, 0.92);
+}
+
+.window-toolbar {
+  height: 44px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 16px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  background: rgba(250, 250, 252, 0.78);
+}
+
+.window-content {
+  flex: 1;
+  background: rgba(248, 248, 252, 0.92);
+  overflow: hidden;
+}
+
+.app-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.5), rgba(220, 220, 230, 0.6));
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 20px rgba(15, 23, 42, 0.18);
+}
+
+.context-menu {
+  position: absolute;
+  min-width: 160px;
+  background: rgba(248, 248, 252, 0.95);
+  border-radius: 12px;
+  box-shadow: 0 18px 36px rgba(15, 23, 42, 0.28);
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  padding: 6px 0;
+  z-index: 100;
+}
+
+.context-menu.hidden {
+  display: none;
+}
+
+.context-menu-item {
+  padding: 6px 16px;
+  font-size: 13px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: default;
+}
+
+.context-menu-item:hover {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+.tooltips-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1000;
+}
+
+.tooltip {
+  position: absolute;
+  padding: 6px 10px;
+  border-radius: 8px;
+  background: var(--mac-tooltip);
+  color: var(--mac-tooltip-text);
+  font-size: 12px;
+  font-weight: 500;
+  box-shadow: 0 10px 18px rgba(0, 0, 0, 0.25);
+}
+
+.dialogs-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 2000;
+  pointer-events: none;
+}
+
+.dialog {
+  position: absolute;
+  min-width: 360px;
+  padding: 24px;
+  border-radius: 16px;
+  background: rgba(248, 248, 252, 0.96);
+  box-shadow: 0 26px 50px rgba(15, 23, 42, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  pointer-events: auto;
+}
+
+.dialog h1 {
+  font-size: 18px;
+  margin: 0 0 12px;
+  font-weight: 600;
+}
+
+.dialog p {
+  margin: 0 0 18px;
+  font-size: 14px;
+  color: var(--mac-secondary);
+  white-space: pre-line;
+}
+
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.mac-button {
+  min-width: 84px;
+  padding: 6px 14px;
+  font-size: 13px;
+  border-radius: 10px;
+  border: none;
+  font-weight: 500;
+  color: rgba(30, 30, 36, 0.92);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.75), rgba(240, 241, 244, 0.88));
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.75) inset, 0 -1px 0 rgba(0, 0, 0, 0.05) inset;
+  transition: transform 120ms ease, box-shadow 120ms ease;
+  cursor: pointer;
+}
+
+.mac-button.primary {
+  background: linear-gradient(180deg, var(--mac-accent), #006ce3);
+  color: white;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.4) inset, 0 8px 18px rgba(10, 132, 255, 0.35);
+}
+
+.mac-button:active {
+  transform: translateY(1px);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1) inset;
+}
+
+.hidden {
+  display: none !important;
+}
+
+@keyframes window-pop {
+  0% {
+    opacity: 0;
+    transform: scale(0.96) translateY(6px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Calculator */
+.calculator {
+  display: grid;
+  grid-template-areas:
+    "display display"
+    "pad scientific";
+  grid-template-columns: 240px 200px;
+  gap: 12px;
+  padding: 16px;
+  height: 100%;
+  background: rgba(245, 246, 250, 0.92);
+}
+
+.calculator-display {
+  grid-area: display;
+  background: linear-gradient(160deg, #1f1f23, #2b2b31);
+  border-radius: 18px;
+  padding: 18px;
+  color: white;
+  font-size: 36px;
+  font-weight: 200;
+  text-align: right;
+  box-shadow: 0 12px 25px rgba(15, 23, 42, 0.35) inset;
+}
+
+.calculator-pad {
+  grid-area: pad;
+  display: grid;
+  grid-template-columns: repeat(4, 56px);
+  grid-template-rows: repeat(5, 56px);
+  gap: 10px;
+}
+
+.calculator-scientific {
+  grid-area: scientific;
+  display: grid;
+  grid-template-columns: repeat(3, 60px);
+  grid-auto-rows: 48px;
+  gap: 8px;
+}
+
+.calc-key {
+  border: none;
+  border-radius: 14px;
+  font-size: 20px;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.85), rgba(230, 230, 235, 0.95));
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.9) inset, 0 6px 12px rgba(0, 0, 0, 0.2);
+  color: rgba(32, 32, 36, 0.95);
+  cursor: pointer;
+  transition: transform 80ms ease, box-shadow 80ms ease;
+  font-family: var(--mac-font-sans);
+}
+
+.calc-key.operator {
+  background: linear-gradient(145deg, #ff9f0a, #ff7f00);
+  color: white;
+}
+
+.calc-key.function.active {
+  background: linear-gradient(145deg, rgba(10, 132, 255, 0.85), rgba(10, 132, 255, 0.65));
+  color: white;
+}
+
+.calculator.scientific-hidden {
+  grid-template-areas:
+    "display"
+    "pad";
+  grid-template-columns: 1fr;
+}
+
+.calculator.scientific-hidden .calculator-scientific {
+  display: none;
+}
+
+.calc-key.function {
+  background: linear-gradient(145deg, rgba(210, 210, 220, 0.85), rgba(195, 195, 205, 0.95));
+  color: rgba(32, 32, 36, 0.85);
+}
+
+.calc-key:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2) inset;
+}
+
+/* Notepad (TextEdit) */
+.textedit {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  height: 100%;
+}
+
+.textedit-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 18px;
+  background: rgba(255, 255, 255, 0.8);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.textedit-toolbar select,
+.textedit-toolbar button {
+  border-radius: 8px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  padding: 6px 10px;
+  background: rgba(255, 255, 255, 0.95);
+  font-size: 13px;
+  font-family: var(--mac-font-sans);
+}
+
+.textedit-editor {
+  width: 100%;
+  height: 100%;
+  padding: 32px;
+  font-size: 16px;
+  line-height: 1.6;
+  outline: none;
+  white-space: pre-wrap;
+  overflow: auto;
+  background: rgba(255, 255, 255, 0.78);
+}
+
+/* Finder */
+.finder {
+  display: grid;
+  grid-template-columns: 220px 1fr 320px;
+  height: 100%;
+  background: rgba(248, 248, 252, 0.94);
+}
+
+.finder-sidebar {
+  padding: 18px 0;
+  border-right: 1px solid rgba(0, 0, 0, 0.08);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.85), rgba(243, 243, 247, 0.85));
+  overflow-y: auto;
+}
+
+.finder-sidebar-section {
+  margin-bottom: 24px;
+}
+
+.finder-sidebar-section h3 {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: rgba(90, 90, 100, 0.8);
+  text-transform: uppercase;
+  padding: 0 20px 8px;
+  margin: 0;
+}
+
+.finder-sidebar-item {
+  padding: 6px 20px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: default;
+  transition: background 120ms ease;
+}
+
+.finder-sidebar-item:hover,
+.finder-sidebar-item.active {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+.finder-column-view {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 240px;
+  overflow-x: auto;
+  border-right: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.finder-column {
+  border-right: 1px solid rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.85);
+}
+
+.finder-column-item {
+  padding: 8px 20px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+  font-size: 14px;
+  cursor: default;
+}
+
+.finder-column-item:hover,
+.finder-column-item.active {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+.finder-preview {
+  padding: 24px;
+  background: rgba(255, 255, 255, 0.78);
+}
+
+.finder-preview h2 {
+  margin: 0 0 12px;
+  font-size: 20px;
+}
+
+.finder-preview .meta {
+  font-size: 12px;
+  color: rgba(100, 100, 110, 0.9);
+  margin-bottom: 18px;
+}
+
+.finder-view-switch {
+  margin-left: auto;
+  display: flex;
+  gap: 8px;
+}
+
+.finder-view-button {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.finder-view-button.active {
+  border-color: rgba(10, 132, 255, 0.5);
+  box-shadow: 0 0 0 1px rgba(10, 132, 255, 0.35);
+}
+
+.finder-icon-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+  gap: 18px;
+  padding: 18px;
+}
+
+.finder-icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  cursor: default;
+}
+
+.finder-icon .icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 16px;
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.85), rgba(230, 230, 238, 0.92));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 12px 18px rgba(15, 23, 42, 0.18);
+}
+
+.finder-icon .icon.folder {
+  background: linear-gradient(180deg, #74b4ff, #2f6df6);
+  position: relative;
+  overflow: hidden;
+}
+
+.finder-icon .icon.folder::before {
+  content: "";
+  position: absolute;
+  top: 12px;
+  left: 10px;
+  width: 44px;
+  height: 30px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.22);
+}
+
+.finder-icon .icon.document {
+  background: linear-gradient(180deg, #fdfefe, #e4e7ef);
+  position: relative;
+}
+
+.finder-icon .icon.document::before {
+  content: "";
+  position: absolute;
+  bottom: 16px;
+  left: 14px;
+  width: 36px;
+  height: 2px;
+  border-radius: 1px;
+  background: rgba(120, 130, 150, 0.6);
+  box-shadow: 0 8px 0 rgba(120, 130, 150, 0.5), 0 16px 0 rgba(120, 130, 150, 0.4);
+}
+
+.finder-icon .label {
+  font-size: 12px;
+  color: rgba(60, 60, 72, 0.9);
+}
+
+.finder-list-view {
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background: rgba(255, 255, 255, 0.88);
+}
+
+.finder-list-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.finder-list-table th {
+  text-align: left;
+  padding: 10px 18px;
+  font-weight: 600;
+  color: rgba(60, 60, 72, 0.7);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  background: rgba(248, 248, 252, 0.95);
+}
+
+.finder-list-table td {
+  padding: 10px 18px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.finder-list-table tr:hover {
+  background: rgba(0, 0, 0, 0.06);
+}
+
+/* Terminal */
+.terminal {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: rgba(16, 16, 20, 0.85);
+}
+
+.terminal-screen {
+  flex: 1;
+  padding: 20px;
+  font-family: var(--mac-font-mono);
+  font-size: 13px;
+  color: rgba(248, 248, 252, 0.92);
+  overflow-y: auto;
+  white-space: pre-wrap;
+}
+
+.terminal-input {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(16, 16, 20, 0.92);
+  font-family: var(--mac-font-mono);
+  font-size: 13px;
+  color: #f6f6f8;
+}
+
+.terminal-input span {
+  color: #64d2ff;
+}
+
+.terminal-input input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: inherit;
+  font: inherit;
+  outline: none;
+}
+
+/* System Preferences */
+.preferences {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  height: 100%;
+  background: rgba(248, 248, 252, 0.95);
+}
+
+.preferences-sidebar {
+  padding: 24px 0;
+  border-right: 1px solid rgba(0, 0, 0, 0.08);
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.preferences-sidebar-item {
+  padding: 14px 24px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: default;
+  transition: background 120ms ease;
+}
+
+.preferences-sidebar-item:hover,
+.preferences-sidebar-item.active {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+.preferences-content {
+  padding: 24px 32px;
+  overflow-y: auto;
+}
+
+.preferences-section {
+  margin-bottom: 32px;
+}
+
+.preferences-section h2 {
+  margin: 0 0 12px;
+  font-size: 20px;
+}
+
+.preferences-control {
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.preferences-control label {
+  font-size: 14px;
+  color: rgba(60, 60, 70, 0.9);
+}
+
+.preferences-control input[type="range"] {
+  width: 140px;
+}
+
+.preferences-control input[type="checkbox"] {
+  transform: scale(1.1);
+}
+
+/* Mission Control window previews */
+.mission-window {
+  position: relative;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 18px 38px rgba(15, 23, 42, 0.38);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+}
+
+.mission-window h4 {
+  position: absolute;
+  bottom: 12px;
+  left: 16px;
+  padding: 6px 12px;
+  border-radius: 10px;
+  background: rgba(10, 10, 12, 0.35);
+  color: white;
+  font-size: 13px;
+  letter-spacing: 0.02em;
+  backdrop-filter: blur(8px);
+}
+
+/* Menus */
+.menu-dropdown {
+  position: absolute;
+  top: 28px;
+  min-width: 180px;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 12px;
+  box-shadow: 0 18px 36px rgba(15, 23, 42, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  padding: 8px 0;
+  z-index: 20;
+}
+
+.menu-dropdown-item {
+  padding: 6px 18px;
+  font-size: 13px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: default;
+}
+
+.menu-dropdown-item:hover {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+.menu-dropdown-separator {
+  height: 1px;
+  margin: 6px 0;
+  background: rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 1200px) {
+  .calculator {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "display"
+      "pad"
+      "scientific";
+  }
+
+  .finder {
+    grid-template-columns: 220px 1fr;
+    grid-template-rows: 1fr 280px;
+    grid-template-areas:
+      "sidebar columns"
+      "sidebar preview";
+  }
+
+  .finder-preview {
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+  }
+}
+body.dark-mode .status-icon.wifi::before {
+  border-color: rgba(240, 240, 246, 0.85);
+}
+
+body.dark-mode .status-icon.battery {
+  border-color: rgba(240, 240, 246, 0.85);
+}
+
+body.dark-mode .status-icon.battery::after {
+  background: rgba(240, 240, 246, 0.85);
+}
